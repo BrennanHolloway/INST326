@@ -45,7 +45,7 @@ class GetData:
                            }
         }
         
-        print(self.teams_dict)
+        print(self.players_list)
         
 #    def next_winner(team_1, team_2):
 #      '''
