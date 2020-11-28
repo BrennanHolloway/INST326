@@ -1,109 +1,89 @@
 #INST326 Final Project
 
-class player(player_name, list_of_player_stats):
+from argparse import ArgumentParser
+import sys
+
+class GetData:
     '''
-    Creates a player object which will contain their stats for the season 
-    ARGS:
-        player_name (str): name of the player
-        list_of_player_stats (list): list of that players stats for the season
-    '''
-    def __init__(self):
-        '''
-        Initalizes the players 
-        '''
+    Creates a class that takes in data from a CSV file and returns 
+    a list of all players, a teams dictionary and a dictionary of NBA record holders
     
-    def create_player(player_name):
-        '''
-        Creates a player object
-    
-        Returns:
-            the string of the player name    
-        '''
-        
-    def player_stats(list_of_player_stats):
-        '''
-        Populates the player object with our chosen stats
-        
-        Returns:
-            the list of the player stats
-        '''
-        
-class team(players, list_of_team_stats):
+    Attributes:
+        players_list (list of tuples): A list with each player and their stats being a tuple
+        team_dict (dict): Teams as keys and their players as values
+        records_dict (dict): Records as keys and players as values
     '''
-    Creates team objects which include the names of five players and one coach 
-    ARGS:
-        players (list): list of players on each team
-        list_of_team_stats (list): list of team stats
-    '''
-    def __init__(self):
-        '''
-        Initalizes the teams
+    def __init__(self,filename):
         '''
         
-    def create_team(players):
         '''
-        LIST: An object made up of player objects
+        self.players_list = []
+        self.teams_dict = {}
+        self.records = {}
         
-        Returns:
-            List of players on the team
-        '''
+        with open(filename, 'r', encoding='utf-8') as f:
+            for line in f:
+                content = line.strip().split(',')
+                #Name,Team,FG%,3PT%,PPG,RPG,APG
+                self.players_list.append([content[0], content[1], content[12],content[14], content[17], content[18], content[20]]) 
+        
+        for x in self.players_list:
+            if x[1] not in self.teams_dict:
+                self.teams_dict[x[1]] = x[0]
+            else:
+                if not isinstance(self.teams_dict[x[1]], list):
+                    self.teams_dict[x[1]] = [self.teams_dict[x[1]]]
+                self.teams_dict[x[1]].append(x[0])
+        
+        self.records = {
+            '2019-2020' : {'Champion' : 'Lal',
+                           'MVP' : 'Giannis Antetokounmpo',
+                           'RotY' : 'Ja Morant',
+                           'PPG Leader' : 'James Harden',
+                           'RPG Leader' : 'Andre Drummond',
+                           'APG Leader' : 'LeBron James'
+                           }
+        }
+        
+        print(self.teams_dict)
+        
+#    def next_winner(team_1, team_2):
+#      '''
+#      '''
+        
+         #Call the teams function in the GetData class to get all the teams
+         #Pick the two selected teams from the dictionary
+         #Compare the players on the teams selected to see who wins
     
-    def team_stats(list_of_team_stats):
-        '''
-        Gives the team stats (Tuple)
+#     def next_champion(all_teams):
+#         '''
+#         Takes in all the team objects and predicts who will be the next NBA champion team
         
-        Returns:
-            List of team stats
-        '''
-    
-    def coach(name):
-        '''
-        Adds the name of the coach to the team list in the first position 
-        '''
+#         Returns: 
+#             The predicted champion of the season
+#         '''
         
-class predictions():
+#     def next_mvp(all_players):
+#         '''
+#         Takes in all the player objects and predicts who the MVP of the season will be
+        
+#         Returns:
+#             The predicted MVP of the season
+#         ''' 
+def main(filename):
+    GetData(filename)
+
+
+def parse_args(arglist):
     '''
-    Uses the team and player objects to compare and make predictions about future winners
     '''
-    def next_winner(team_1, team_2):
-        '''
-        Takes in two team objects and predicts the winner of the matchup
-        
-        Returns:
-            The predicted winner of the game
-        '''
+    parser = ArgumentParser()
+    parser.add_argument('filename', help = 'name of csv')
     
-    def next_champion(all_teams):
-        '''
-        Takes in all the team objects and predicts who will be the next NBA champion team
-        
-        Returns: 
-            The predicted champion of the season
-        '''
-        
-    def next_mvp(all_players):
-        '''
-        Takes in all the player objects and predicts who the MVP of the season will be
-        
-        Returns:
-            The predicted MVP of the season
-        ''' 
-        
-class records():
-    '''
-    Records all the major achievements for each season and stores it as a list of dictionaries
-    i.e. MVP, DMVP, Champion, Finals MVP etc..
-    '''
     
-    def __init__(self):
-        '''
-        initalizes the list to keep track of players
-        '''
+    return parser.parse_args(arglist)
+
+if __name__ == '__main__':
+    args = parse_args(sys.argv[1:])
+    main(args.filename)
     
-    def record(list_of_accolades):
-        '''
-        takes in a list of accolades and adds it to a running list of all-time NBA players
-        
-        Returns:
-            An updated list with the new best players from the current season
-        '''
