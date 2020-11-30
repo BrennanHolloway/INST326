@@ -2,85 +2,133 @@
 
 from argparse import ArgumentParser
 import sys
+# import pandas as pd
+# import numpy as np
+# import matplotlib.pyplot as plt
 
-class GetData:
+class NBA:
     '''
     Creates a class that takes in data from a CSV file and returns 
-    a list of all players, a teams dictionary and a dictionary of NBA record holders
+    a list of all players, a teams dictionary
     
     Attributes:
         players_list (list of tuples): A list with each player and their stats being a tuple
         team_dict (dict): Teams as keys and their players as values
-        records_dict (dict): Records as keys and players as values
+        
     '''
+    
     def __init__(self,filename):
         '''
-        
+        Reads in a CSV file 
+        Constructs two attributes of NBA instance that are a players_dict and a teams_dict
         '''
-        self.players_list = []
+        self.players_dict = {}
         self.teams_dict = {}
-        self.records = {}
-        
+
         with open(filename, 'r', encoding='utf-8') as f:
             for line in f:
                 content = line.strip().split(',')
-                #Name,Team,FG%,3PT%,PPG,RPG,APG
-                self.players_list.append([content[0], content[1], content[12],content[14], content[17], content[18], content[20]]) 
+                name = content[0]
+                team = content[1]
+                #Name,Team,FG%,3PT%,PPG,RPG,APG,Steals,Blocks,Turnovers
+                self.players_dict.update( {name : {'Team' : content[1], 'FG%' : content[12],'3PT%' : content[14], 
+                                                   'PPG' : content[17], 'RPG' : content[18], 'APG' : content[20], 
+                                                   'Steals' : content[22], 'Blocks' : content[23], 'Turnovers' : content[24]}} ) 
+                if team in self.teams_dict:
+                    self.teams_dict[team].append(name)
+                else:
+                    self.teams_dict[team] = [name] 
         
-        for x in self.players_list:
-            if x[1] not in self.teams_dict:
-                self.teams_dict[x[1]] = x[0]
-            else:
-                if not isinstance(self.teams_dict[x[1]], list):
-                    self.teams_dict[x[1]] = [self.teams_dict[x[1]]]
-                self.teams_dict[x[1]].append(x[0])
+    def predict_game_winner(self, team1, team2):
+        '''
+        Params:
+            team1 (str): team name, e.g., Hou
+            team2 (str): another team name, e.g., Lal
+        Return:
+            team (str): the team name that get more points as the winner
+        '''
+        points1 = 0
+        points2 = 0
+        for player in self.teams_dict[team1]:
+            points1 += float(self.players_dict[player]['PPG'])
+        for player in self.teams_dict[team2]:
+            points2 += float(self.players_dict[player]['PPG'])
         
-        self.records = {
-            '2019-2020' : {'Champion' : 'Lal',
-                           'MVP' : 'Giannis Antetokounmpo',
-                           'RotY' : 'Ja Morant',
-                           'PPG Leader' : 'James Harden',
-                           'RPG Leader' : 'Andre Drummond',
-                           'APG Leader' : 'LeBron James'
-                           }
-        }
+        return team1 if points1 > points2 else team2
+     
+    def predict_champion(self):
+        '''
+        Call predict_game_winner method to record each team's winning times, at worst 0 win all lose, at best all win 0 lose.
+        Based on every team's winning times, to draw a pie chart showing each team's probability to be the champion.
+        Returns: 
+            best_team (str): the name of the team we predict to be the best
+            counter (int): the number of wins they have
+            (Also a PIE chart of each teams wins to go with our prediction)
+        '''
+        team_wins = []
+        win_times = 0
+        for team in self.teams_dict:
+            team_wins.append( {team : win_times} )
+            win_times = 0
+            for other_team in self.teams_dict:
+                if other_team != team: # cannot compete with itself
+                    win_times += 1 if self.predict_game_winner(team, other_team) == team else 0 # win_times add 1 if it wins
+
+        best_team = ''
+        counter = 0 
+        for x in team_wins:
+            for y in x:
+                if x[y] > counter:
+                    best_team = y
+                    counter = x[y]           
         
-        print(self.players_list)
+        return(best_team, counter)
         
-#    def next_winner(team_1, team_2):
-#      '''
-#      '''
+        #STILL NEED TO USE PANDAS AND MATPLOTLIP TO CREATE A PIE CHART HERE 
         
-         #Call the teams function in the GetData class to get all the teams
-         #Pick the two selected teams from the dictionary
-         #Compare the players on the teams selected to see who wins
-    
-#     def next_champion(all_teams):
-#         '''
-#         Takes in all the team objects and predicts who will be the next NBA champion team
+    def predict_mvp(self):
+        '''
+        Parameters: 
+            None (only self)
+        Using the formula: MVP score = Points * True Shooting% + 1.5(Assists) + 1.2(Rebounds) + 3(Blocks) + 3(Steals) - Turnovers
+        to select the player that has the highest score. He is most likely to be the mvp of this season.
+        Returns:
+            mvp (str): The MVP player's name
+        '''
+        highest_score = 0
+        mvp = ''
+        for p in self.players_dict:
+            stats = self.players_dict[p]
+            # calculate player's score by defined formula
+            score = float(stats['PPG']) * float(stats['FG%'])
+            + (1.5*float(stats['APG'])) + (1.2*float(stats['RPG']))
+            + (3*float(stats['Blocks'])) + (3*float(stats['Steals']))
+            - float(stats['Turnovers'])
+            if score > highest_score: # update the mvp player
+                highest_score = score
+                mvp = p
+        return mvp
         
-#         Returns: 
-#             The predicted champion of the season
-#         '''
-        
-#     def next_mvp(all_players):
-#         '''
-#         Takes in all the player objects and predicts who the MVP of the season will be
-        
-#         Returns:
-#             The predicted MVP of the season
-#         ''' 
 def main(filename):
-    GetData(filename)
+    nba = NBA(filename)
 
-
+    #Test predict_game_winner method
+    team1 = 'Hou'
+    team2 = 'Lal'
+    winner = nba.predict_game_winner(team1, team2)
+    print(team1, 'vs.', team2, ', the predicted winning team is:', winner)
+    
+    #Test predict_champion method
+    best = nba.predict_champion()
+    print(best[0], 'is the next predicted champion of the NBA with a total wins of', best[1])
+    
+    #Test predict_mvp method
+    mvp_2 = nba.predict_mvp()
+    print('The predicted MVP player of the year is:', mvp_2)
+    
 def parse_args(arglist):
-    '''
-    '''
     parser = ArgumentParser()
     parser.add_argument('filename', help = 'name of csv')
-    
-    
     return parser.parse_args(arglist)
 
 if __name__ == '__main__':
