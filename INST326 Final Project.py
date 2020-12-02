@@ -97,6 +97,15 @@ class NBA:
 
 
 def main(filename):
+    """
+    Parameters:
+        filename 
+    Uses the data from the CSV file to predict the game winner of a game by adding average points per game for the top 5 players in each team.
+    MVP will be predicted by calling predict_mvp method up above by using the formula used.
+    The champion of the season will be predicted by analyzing the stats of the players on each team predicting the highest probable champion.
+    Returns:
+        Predicted winner, MVP, and Champion
+    """
     
     # test predict_game_winner method
     team1 = 'Hou'
