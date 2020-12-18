@@ -126,6 +126,52 @@ class NBA:
                 highest_score = score
                 mvp = p
         return mvp
+    
+    def best_shooter(self, team3, team4):
+        '''
+        Parameters:
+            team3: A choosen NBA team
+            team4: A choosen NBA team
+        Takes in two NBA team and calls our predict_game_winner function to determine who would win the game,
+        then finds who was the best shooter on that team
+        Returns:
+            shooter (str): The name of the player who was the best shooter
+        '''
+        counter = 0
+        best_shooter = 0
+        shooter = ''
+        winner = self.predict_game_winner(team3,team4)
+        
+        for player in self.teams_dict[winner]:
+            counter = (self.players_dict[player]["3PT%"])
+            if float(counter) > float(best_shooter):
+                best_shooter = counter
+                shooter = player
+                
+        return shooter
+        
+    def best_rebounder(self, team3, team4):
+        '''
+        Parameters:
+            team3: A choosen NBA team
+            team4: A choosen NBA team
+        Takes in two NBA team and calls our predict_game_winner function to determine who would win the game,
+        then finds who was the best rebounder on that team
+        Returns:
+            rebounder (str): The name of the player who was the best rebounder
+        '''
+        counter = 0
+        best_rebounder = 0
+        rebounder = ''
+        winner = self.predict_game_winner(team3,team4)
+        
+        for player in self.teams_dict[winner]:
+            counter = (self.players_dict[player]["RPG"])
+            if float(counter) > float(best_rebounder):
+                best_rebounder = counter
+                rebounder = player
+                
+        return rebounder
         
 def main(filename):
     """
@@ -134,14 +180,14 @@ def main(filename):
     Uses the data from the CSV file to predict the game winner of a game by adding average points per game for the top 5 players in each team.
     MVP will be predicted by calling predict_mvp method up above by using the formula used.
     The champion of the season will be predicted by analyzing the stats of the players on each team predicting the highest probable champion.
-    Returns:
+    Prints:
         Predicted winner, MVP, and Champion
     """
     nba = NBA(filename)
-
+    
     #Test predict_game_winner method
-    team1 = 'Hou'
-    team2 = 'Lal'
+    team1 = 'Den'
+    team2 = 'Okc'
     winner = nba.predict_game_winner(team1, team2)
     print(team1, 'vs.', team2, ', the predicted winning team is:', winner)
     
@@ -153,7 +199,15 @@ def main(filename):
     mvp_2 = nba.predict_mvp()
     print('The predicted MVP player of the year is:', mvp_2)
     
+    #Test best_shooter method
+    team3 = 'Lal'
+    team4 = 'Hou'
+    shooter = nba.best_shooter(team3, team4)
+    print('The best shooter on the winning team between the matchup of', team3, 'and', team4, 'was', shooter)
     
+    #Test the rebounder method
+    rebounder = nba.best_rebounder(team3, team4)
+    print('The best rebounder on the winning team between the matchup of', team3, 'and', team4, 'was', rebounder)
     
 def parse_args(arglist):
     parser = ArgumentParser()

@@ -1,0 +1,28 @@
+Hyeong Choi, Brennan Holloway, Ruijuan Wang, Wenchen Wang
+INST 326
+Final Project Readme
+The three files we have in our repository all play a part in the running of our final program. 
+The CSV file that we managed to get was a database of all the stats of players that played during the 2019-2020 season. 
+This CSV file was found on nbastuffer.com. 
+What our program does is it analyzes the CSV file and predicts the game winner of a game if given two teams, along with the champion of that season, as well as the MVP of the season using the MVP score formula. 
+As for the function that predicts the winner of two teams, how you would interpret that would be to enter two teams that you would want to see the winner of into the main function code of the program.
+Then, after the program is run, it will tell us the result of that matchup.  
+Our main function then prints out the results of the analysis. 
+We also have a function that takes in two NBA teams and calls our predict_game_winner function to determine who would win the game, then finds out the best shooter on the winning team. 
+Same would go for our best_rebounder function that would take in two NBA teams and calls the predict_game_winner function to determine who the best rebounder was for the winning team. 
+These two functions use the dataframe that was built in the init function of our program. 
+The program can be run by entering python along with the name of our program’s file and the file name of the CSV file that has all the data. 
+The data that the program emits would be the predictors mentioned up above as well as a pie chart that shows the percentage of wins that each time went home with. 
+The mvp formula that we used in the mvp function was gained from the first website that is in the bibliography.
+ The nbastuffer website was where we got our csv file from. 
+The matplotlib websites were used in creating the pie chart for our program.
+ The stackoverflow website along with the geeksforgeeks website was used as a resource for getting our syntaxes correct while coding the program. 
+
+Bibliography
+
+https://towardsdatascience.com/nba-mvp-predictor-c700e50e0917 
+https://www.nbastuffer.com/2019-2020-nba-player-stats/
+https://matplotlib.org/3.1.1/gallery/pie_and_polar_charts/pie_features.html
+https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.pie.html
+https://stackoverflow.com/questions/7271482/getting-a-list-of-values-from-a-list-of-dicts
+https://www.geeksforgeeks.org/creating-a-dataframe-using-csv-files/
