@@ -2,14 +2,14 @@
 
 from argparse import ArgumentParser
 import sys
-# import pandas as pd
-# import numpy as np
-# import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 class NBA:
     '''
     Creates a class that takes in data from a CSV file and returns 
-    a list of all players, a teams dictionary
+    a list of all players, a teams dictionary, and a dataframe of all information
     
     Methods:
         predict_game_winner(self, team1, team2)
@@ -25,11 +25,18 @@ class NBA:
     def __init__(self,filename):
         '''
         Reads in a CSV file 
-        Constructs two attributes of NBA instance that are a players_dict and a teams_dict
+        Constructs three attributes of NBA instance that are a players_dict, a teams_dict and a dataframe
         '''
         self.players_dict = {}
-        self.teams_dict = {}
-
+        self.teams_dict = {} 
+        
+        columns = ["Name","Team","Position","Age","GP","MPG",
+                   "MIN%","USG%","TO%","FTA","FT%","2PA","2P%","3PA"
+                   ,"3P%","eFG%","TS%","PPG","RPG","TRB%","APG","AST%",
+                   "SPG","BPG","TOPG","VIV","ORTG","DRTG"]
+        self.df = pd.read_csv(filename, sep = ',', names=columns)
+        print(self.df.head())
+        
         with open(filename, 'r', encoding='utf-8') as f:
             for line in f:
                 content = line.strip().split(',')
@@ -71,8 +78,11 @@ class NBA:
             (Also a PIE chart of each teams wins to go with our prediction)
         '''
         team_wins = []
+        labels = []
+        wins = []
         win_times = 0
         for team in self.teams_dict:
+            labels.append(team)
             team_wins.append( {team : win_times} )
             win_times = 0
             for other_team in self.teams_dict:
@@ -83,13 +93,16 @@ class NBA:
         counter = 0 
         for x in team_wins:
             for y in x:
+                wins.append(x[y])
                 if x[y] > counter:
                     best_team = y
                     counter = x[y]           
+
+        plt.pie( wins, labels=labels, autopct='%1.1f%%', shadow=True, startangle=140) # draw a pie chart based on predicted winning teams
+        plt.axis('equal')
+        plt.show() # show the plot
         
         return(best_team, counter)
-        
-        #STILL NEED TO USE PANDAS AND MATPLOTLIP TO CREATE A PIE CHART HERE 
         
     def predict_mvp(self):
         '''
@@ -139,6 +152,8 @@ def main(filename):
     #Test predict_mvp method
     mvp_2 = nba.predict_mvp()
     print('The predicted MVP player of the year is:', mvp_2)
+    
+    
     
 def parse_args(arglist):
     parser = ArgumentParser()
