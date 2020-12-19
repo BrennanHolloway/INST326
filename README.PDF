@@ -1,28 +1,39 @@
 Hyeong Choi, Brennan Holloway, Ruijuan Wang, Wenchen Wang
 INST 326
 Final Project Readme
-The three files we have in our repository all play a part in the running of our final program. 
+The files we have in our repository all play a part in the running of our final program. 
 The CSV file that we managed to get was a database of all the stats of players that played during the 2019-2020 season. 
 This CSV file was found on nbastuffer.com. 
-What our program does is it analyzes the CSV file and predicts the game winner of a game if given two teams, along with the champion of that season, as well as the MVP of the season using the MVP score formula. 
+The final python script is the main part of our project, that has all the functions and class that we created. 
+We created a class that would take in data from our CSV file and return a list of all players, a team dictionary, and a dataframe of all the information that we used. 
+What our program does is it analyzes the CSV file and creates a dataframe from the CSV file. 
+Then, it predicts the game winner of a game if given two teams, along with the champion of that season, as well as the MVP of the season using the MVP score formula. 
+We also have an init function in the beginning of our program that constructs three attributes of the NBA instance that are a players dictionary, a teams dictionary, and a dataframe. 
 As for the function that predicts the winner of two teams, how you would interpret that would be to enter two teams that you would want to see the winner of into the main function code of the program.
-Then, after the program is run, it will tell us the result of that matchup.  
-Our main function then prints out the results of the analysis. 
-We also have a function that takes in two NBA teams and calls our predict_game_winner function to determine who would win the game, then finds out the best shooter on the winning team. 
+Then, after the program is run, it will tell us the result of that matchup. 
+Our main function prints out the results of all the analysis. 
+We also included a function that takes in two NBA teams and calls our predict_game_winner function to determine who would win the game, then finds out the best shooter on the winning team. 
 Same would go for our best_rebounder function that would take in two NBA teams and calls the predict_game_winner function to determine who the best rebounder was for the winning team. 
-These two functions use the dataframe that was built in the init function of our program. 
-The program can be run by entering python along with the name of our program’s file and the file name of the CSV file that has all the data. 
-The data that the program emits would be the predictors mentioned up above as well as a pie chart that shows the percentage of wins that each time went home with. 
-The mvp formula that we used in the mvp function was gained from the first website that is in the bibliography.
- The nbastuffer website was where we got our csv file from. 
-The matplotlib websites were used in creating the pie chart for our program.
- The stackoverflow website along with the geeksforgeeks website was used as a resource for getting our syntaxes correct while coding the program. 
+All of our functions uses the dataframe that was built in the early process of creating our  program. 
+The parse_args function and the if __name functions help us return the data that was analyzed and calculated with our others functions in the class. 
+Our program can be run by entering python along with the name of our program’s file and the file name of the CSV file that has all the data. 
+The data that the program emits would be the predictors mentioned up above as well as a pie chart that shows the percentage of wins that each time went home with during the season that we analyzed. 
+The test script that is also included in the repository tests each function to see if it runs correctly. 
+We decided write a script for each function that is included in our program to test that all our functions ran correctly and accurately. 
 
-Bibliography
+
+
+Annotated Bibliography
 
 https://towardsdatascience.com/nba-mvp-predictor-c700e50e0917 
+This website was used in order to figure out the MVP formula that the NBA actually uses to calculate the MVP of the season. MVP score = Points * True Shooting% + 1.5(Assists) + 1.2(Rebounds) + 3(Blocks) + 3(Steals) – Turnovers. This data was used in the predict_mvp function. After calculating each MVP score of the players in the CSV database, our program would tell the user which player had the highest MVP score, then in turn would be the MVP of the season.
 https://www.nbastuffer.com/2019-2020-nba-player-stats/
+This website used to get the CSV file that we would use for the program. It has a detailed stat page of the players of the 2019-2020 NBA season and in-game stats that we would use for many predictions in our program. 
 https://matplotlib.org/3.1.1/gallery/pie_and_polar_charts/pie_features.html
 https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.pie.html
+These two websites above were used in order to get the syntax of our pie chart, and how we would include the pie chart into our project. plt.pie( wins, labels=labels, autopct='%1.1f%%', shadow=True, startangle=140) # draw a pie chart based on predicted winning teams
+This was the syntax that we figured out from the website in order to properly include a pie chart in our program. 
 https://stackoverflow.com/questions/7271482/getting-a-list-of-values-from-a-list-of-dicts
+This website was used in order to figure out the correct syntax when we wanted to get a list of values from a list of dictionaries. In our best_shooter and best_rebounder functions, we needed to obtain certain values in the dataframe that we created and that dataframe had a list of dictionaries that had values for specific stats. 
 https://www.geeksforgeeks.org/creating-a-dataframe-using-csv-files/
+This website was used in order to figure out how to create a dataframe using a CSV file. We would have to create a list of dictionaries from the CSV in order to do work in predicting matchups and future MVPs of the season, but creating a dataframe from the data in the CSV file was a priority in order to start working on our project. This website helped us figure out the correct syntax on how to properly manage to create our dataframe from scratch. 
